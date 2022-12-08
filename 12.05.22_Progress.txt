@@ -1,0 +1,141 @@
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <vector>
+#include <sstream>
+#include <random>
+using namespace std;
+
+double accuracy() {
+    
+    double random;
+
+    random = rand() % 100 + 1;
+
+    return random;
+}
+
+bool inSet(int currFeature, vector<int> set) {
+
+
+    for(unsigned int i = 0; i < set.size(); ++i) {
+        if(currFeature == set.at(i)) {
+            return true;
+        }
+    }
+
+    return false;
+
+}
+
+void accurate(vector<vector<double>> _data) {
+
+    vector<double> object_to_classify;
+
+    double label_object_to_classify = 0;
+
+    double nearest_neighbor_distance = 0;
+    double nearest_neighbor_location = 0;
+    
+    for(unsigned int i = 0; i < _data.size(); ++i) {
+        object_to_classify = {_data[i].begin() + 1, _data[i].end()};
+        label_object_to_classify = _data[i][0];
+        //cout << "Looping over i, at the " << i + 1 << " location" << endl;
+        //cout << "The " << i + 1 << "th object is in class " << label_object_to_classify << endl;
+        nearest_neighbor_distance = 0;
+        nearest_neighbor_location = 0;
+        for(unsigned int j = 0; j < _data.size(); ++j) {
+            if(j != i) {
+                cout << "Ask if " << i + 1 << " is nearest neighbor with " << j + 1 << endl;
+            }
+        }
+    }
+
+   // cout << endl;
+
+    // for(unsigned int i = 0; i < object_to_classify.size(); ++i) {
+    //     cout << object_to_classify.at(i) << " ";
+    // } 
+}
+
+void search(vector<vector<double>> dat) {
+
+    vector<int> currSet;
+    int feature_to_add;
+    double _accuracy = 0;
+    double best = 0;
+
+    for(int i = 1; i < dat[0].size(); ++i) {
+        cout << "On the " << i  << "'th level of the search tree" << endl;
+        best = 0;
+        feature_to_add  = 0;
+        for(int j = 1; j < dat[0].size(); ++j) {
+            if (inSet(j, currSet) != true) {
+                cout << "--Considering adding the " << j << " feature " << endl;
+                _accuracy = accuracy();
+                if(_accuracy > best) {
+                    best = _accuracy;
+                    feature_to_add = j;
+                }
+            }
+        }
+        currSet.push_back(feature_to_add);
+        cout << "On level " << i << " I added feature " << feature_to_add << " to current set" << endl;
+    }
+
+    cout << endl;
+    for(unsigned int i = 0; i < currSet.size(); ++i) {
+        cout << currSet.at(i) << " ";
+    }
+}
+
+int main() {
+
+    string fileName;
+    ifstream myFile;
+    string line;
+    double entry;
+
+    srand(time(NULL));
+
+    cout << "Enter file name: ";
+
+    cin >> fileName;
+    cout << endl;
+
+    myFile.open(fileName);
+
+    vector<vector<double>> data;
+
+    if(myFile.fail()) {
+        cout << "File failed to open." << endl;
+        return 0;
+    }
+
+    while(getline(myFile, line)) {
+        data.push_back(vector<double>());
+        istringstream ss(line);
+        while(ss >> entry) {
+            data.back().push_back(entry);
+        }
+    }
+
+    // for(unsigned int i = 0; i < data.size(); ++i) {
+    //     for(unsigned int j = 0; j < data[i].size(); ++j) {
+    //         cout << data[i][j] << " ";
+    //     }
+    //     cout << endl;
+    // }
+
+    myFile.close();
+
+    //search(data);
+
+    accurate(data);
+
+
+
+
+    return 0;
+
+}
